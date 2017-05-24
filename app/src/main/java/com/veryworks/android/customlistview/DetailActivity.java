@@ -3,13 +3,12 @@ package com.veryworks.android.customlistview;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+import android.util.Log;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 public class DetailActivity extends AppCompatActivity {
 
-    TextView textView;
+//    TextView textView;
     ImageView imageView;
 
     @Override
@@ -18,7 +17,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         imageView = (ImageView) findViewById(R.id.imageView);
-        textView = (TextView) findViewById(R.id.textView);
+        //textView = (TextView) findViewById(R.id.textView);
 
         // Activity 에서 넘어온 값 처리하기
         // 1. intent 를 꺼낸다
@@ -31,16 +30,18 @@ public class DetailActivity extends AppCompatActivity {
             // 3.1 bundle 이 있으면 값을 꺼내서 변수에 담는다
             position = bundle.getInt(MainActivity.DATA_KEY);
         }
+        Log.e("DATA","===========position="+position);
         if(position > -1) {
+            Log.e("DATA","===========DATA_RES_ID="+bundle.getInt(MainActivity.DATA_RES_ID));
             imageView.setImageResource(bundle.getInt(MainActivity.DATA_RES_ID));
-            textView.setText(bundle.getString(MainActivity.DATA_TITLE));
+            //textView.setText(bundle.getString(MainActivity.DATA_TITLE));
         }
 
-        findViewById(R.id.btnBack).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+//        findViewById(R.id.btnBack).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                finish();
+//            }
+//        });
     }
 }

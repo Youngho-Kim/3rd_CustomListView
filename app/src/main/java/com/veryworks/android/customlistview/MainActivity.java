@@ -87,7 +87,7 @@ class CustomAdapter extends BaseAdapter {
             holder = new Holder();
             holder.no = (TextView) convertView.findViewById(R.id.txtNo);
             holder.title = (TextView) convertView.findViewById(R.id.txtTitle);
-            holder.image = (ImageView) convertView.findViewById(R.id.imageView);
+            holder.image = (ImageView) convertView.findViewById(R.id.detail);
             convertView.setTag(holder);
         }else{
             holder = (Holder) convertView.getTag();
