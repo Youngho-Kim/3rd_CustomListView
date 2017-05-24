@@ -1,11 +1,13 @@
 package com.veryworks.android.customlistview;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -14,6 +16,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String DATA_KEY = "position";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +28,17 @@ public class MainActivity extends AppCompatActivity {
         // 2. 아답터
         CustomAdapter adapter = new CustomAdapter(datas, this);
         // 3. 연결
-        ((ListView) findViewById(R.id.listView)).setAdapter(adapter);
+        ListView listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                intent.putExtra(DATA_KEY, position);
+                startActivity(intent);
+            }
+        });
     }
 }
 
