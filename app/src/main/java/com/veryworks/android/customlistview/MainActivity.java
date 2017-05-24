@@ -18,13 +18,17 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     public static final String DATA_KEY = "position";
+    public static final String DATA_RES_ID = "resid";
+    public static final String DATA_TITLE = "title";
+
+    ArrayList<Data> datas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // 1. 데이터
-        ArrayList<Data> datas = Loader.getData(this);
+        datas = Loader.getData(this);
         // 2. 아답터
         CustomAdapter adapter = new CustomAdapter(datas, this);
         // 3. 연결
@@ -35,7 +39,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+
+                Data data = datas.get(position);
+
                 intent.putExtra(DATA_KEY, position);
+                intent.putExtra(DATA_RES_ID, data.resId);
+                intent.putExtra(DATA_TITLE, data.title);
+
                 startActivity(intent);
             }
         });
