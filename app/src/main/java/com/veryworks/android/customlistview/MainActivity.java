@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,14 +20,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // 1. 데이터
-        ArrayList<Data> datas = Loader.getData();
-
+        ArrayList<Data> datas = Loader.getData(this);
         // 2. 아답터
         CustomAdapter adapter = new CustomAdapter(datas, this);
-
         // 3. 연결
         ((ListView) findViewById(R.id.listView)).setAdapter(adapter);
-
     }
 }
 
@@ -65,7 +63,7 @@ class CustomAdapter extends BaseAdapter {
             holder = new Holder();
             holder.no = (TextView) convertView.findViewById(R.id.txtNo);
             holder.title = (TextView) convertView.findViewById(R.id.txtTitle);
-
+            holder.image = (ImageView) convertView.findViewById(R.id.imageView);
             convertView.setTag(holder);
         }else{
             holder = (Holder) convertView.getTag();
@@ -76,6 +74,9 @@ class CustomAdapter extends BaseAdapter {
 //        ((TextView) convertView.findViewById(R.id.txtTitle)).setText(data.title);
         holder.no.setText(data.no+"");
         holder.title.setText(data.title);
+        // id를 가져오는 작업을 loader 에서 한다.
+        //int id = context.getResources().getIdentifier(holder.image, "mipmap", context.getPackageName());
+        holder.image.setImageResource(data.resId);
 
         return convertView;
     }
@@ -83,17 +84,21 @@ class CustomAdapter extends BaseAdapter {
     class Holder {
         TextView no;
         TextView title;
+        ImageView image;
     }
 }
 
 
 class Loader {
-    public static ArrayList<Data> getData(){
+    public static ArrayList<Data> getData(Context context){
         ArrayList<Data> result = new ArrayList<>();
-        for(int i=0 ; i<100 ; i++){
+        for(int i=1 ; i<=10 ; i++){
             Data data = new Data();
-            data.no = i+1;
-            data.title = "데이터"+i;
+            data.no = i;
+            data.title = "자동차";
+
+            data.setImage("car"+i, context);
+
             result.add(data);
         }
         return result;
@@ -103,4 +108,12 @@ class Loader {
 class Data {
     public int no;
     public String title;
+    public String image;
+    public int resId;
+
+    public void setImage(String str, Context context){
+        image = str;
+        // 문자열로 리소스 아이디 가져오기
+        resId = context.getResources().getIdentifier(image, "mipmap", context.getPackageName());
+    }
 }
