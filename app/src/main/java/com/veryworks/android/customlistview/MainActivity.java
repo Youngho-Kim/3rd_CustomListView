@@ -7,13 +7,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import static com.veryworks.android.customlistview.MainActivity.DATA_KEY;
+import static com.veryworks.android.customlistview.MainActivity.DATA_RES_ID;
+import static com.veryworks.android.customlistview.MainActivity.DATA_TITLE;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,20 +39,21 @@ public class MainActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-
-                Data data = datas.get(position);
-
-                intent.putExtra(DATA_KEY, position);
-                intent.putExtra(DATA_RES_ID, data.resId);
-                intent.putExtra(DATA_TITLE, data.title);
-
-                startActivity(intent);
-            }
-        });
+        // Adapter 안으로 이동 >>>>>>>>>
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+//
+//                Data data = datas.get(position);
+//
+//                intent.putExtra(DATA_KEY, position);
+//                intent.putExtra(DATA_RES_ID, data.resId);
+//                intent.putExtra(DATA_TITLE, data.title);
+//
+//                startActivity(intent);
+//            }
+//        });
     }
 }
 
@@ -57,9 +62,12 @@ class CustomAdapter extends BaseAdapter {
     ArrayList<Data> datas;
     // 2. 인플레이터
     LayoutInflater inflater;
+    // 3. 컨텍스트
+    Context context;
 
     public CustomAdapter(ArrayList<Data> datas, Context context) {
         this.datas = datas;
+        this.context = context;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -84,7 +92,7 @@ class CustomAdapter extends BaseAdapter {
         Holder holder;
         if(convertView == null) {
             convertView = inflater.inflate(R.layout.item_list, null);
-            holder = new Holder(convertView);
+            holder = new Holder(convertView,context);
             convertView.setTag(holder);
         }else{
             holder = (Holder) convertView.getTag();
@@ -92,6 +100,7 @@ class CustomAdapter extends BaseAdapter {
         // 2. 내 아이템에 해당하는 데이터를 가져온다
         Data data = datas.get(position);
         // 3. 뷰에 데이터를 세팅한다.
+        holder.setPosition(position);
         holder.setNo(data.no);
         holder.setTitle(data.title);
         holder.setImage(data.resId);
@@ -100,16 +109,36 @@ class CustomAdapter extends BaseAdapter {
     }
 
     class Holder {
+        int position;
         TextView no;
         TextView title;
         ImageView image;
+        int resId;
 
-        public Holder(View view) {
+        public Holder(View view, final Context context) {
             no = (TextView) view.findViewById(R.id.txtNo);
             title = (TextView) view.findViewById(R.id.txtTitle);
             image = (ImageView) view.findViewById(R.id.detail);
             // 1. 이미지뷰에 onclick listener 를 달고 상세페이지로 이동시킨다.
+            image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, DetailActivity.class);
+
+                    intent.putExtra(DATA_KEY, Holder.this.position);
+                    intent.putExtra(DATA_RES_ID, resId);
+                    intent.putExtra(DATA_TITLE, title.getText().toString());
+
+                    context.startActivity(intent);
+                }
+            });
             // 2. 타이틀 텍스트뷰에 onclick listener 를 달고 Toast 로 내용을 출력한다.
+            title.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, title.getText(), Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
         public void setNo(int no){
@@ -121,9 +150,13 @@ class CustomAdapter extends BaseAdapter {
         }
 
         public void setImage(int resId){
+            this.resId = resId;
             this.image.setImageResource(resId);
         }
 
+        public void setPosition(int position) {
+            this.position = position;
+        }
     }
 }
 
