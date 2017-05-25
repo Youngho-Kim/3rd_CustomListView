@@ -84,10 +84,7 @@ class CustomAdapter extends BaseAdapter {
         Holder holder;
         if(convertView == null) {
             convertView = inflater.inflate(R.layout.item_list, null);
-            holder = new Holder();
-            holder.no = (TextView) convertView.findViewById(R.id.txtNo);
-            holder.title = (TextView) convertView.findViewById(R.id.txtTitle);
-            holder.image = (ImageView) convertView.findViewById(R.id.detail);
+            holder = new Holder(convertView);
             convertView.setTag(holder);
         }else{
             holder = (Holder) convertView.getTag();
@@ -96,11 +93,9 @@ class CustomAdapter extends BaseAdapter {
         Data data = datas.get(position);
 //        ((TextView) convertView.findViewById(R.id.txtNo)).setText(data.no + "");
 //        ((TextView) convertView.findViewById(R.id.txtTitle)).setText(data.title);
-        holder.no.setText(data.no+"");
-        holder.title.setText(data.title);
-        // id를 가져오는 작업을 loader 에서 한다.
-        //int id = context.getResources().getIdentifier(holder.image, "mipmap", context.getPackageName());
-        holder.image.setImageResource(data.resId);
+        holder.setNo(data.no);
+        holder.setTitle(data.title);
+        holder.setImage(data.resId);
 
         return convertView;
     }
@@ -109,6 +104,27 @@ class CustomAdapter extends BaseAdapter {
         TextView no;
         TextView title;
         ImageView image;
+
+        public Holder(View view) {
+            no = (TextView) view.findViewById(R.id.txtNo);
+            title = (TextView) view.findViewById(R.id.txtTitle);
+            image = (ImageView) view.findViewById(R.id.detail);
+            // 1. 이미지뷰에 onclick listener 를 달고 상세페이지로 이동시킨다.
+            // 2. 타이틀 텍스트뷰에 onclick listener 를 달고 Toast 로 내용을 출력한다.
+        }
+
+        public void setNo(int no){
+            this.no.setText(no + "");
+        }
+
+        public void setTitle(String title){
+            this.title.setText(title);
+        }
+
+        public void setImage(int resId){
+            this.image.setImageResource(resId);
+        }
+
     }
 }
 
