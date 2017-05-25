@@ -89,10 +89,9 @@ class CustomAdapter extends BaseAdapter {
         }else{
             holder = (Holder) convertView.getTag();
         }
-        // 2. 내 아이템에 해당하는 데이터를 세팅해준다.
+        // 2. 내 아이템에 해당하는 데이터를 가져온다
         Data data = datas.get(position);
-//        ((TextView) convertView.findViewById(R.id.txtNo)).setText(data.no + "");
-//        ((TextView) convertView.findViewById(R.id.txtTitle)).setText(data.title);
+        // 3. 뷰에 데이터를 세팅한다.
         holder.setNo(data.no);
         holder.setTitle(data.title);
         holder.setImage(data.resId);
